@@ -1,0 +1,36 @@
+version: '3.8'
+
+volumes:
+  postgre-vol:
+
+networks:
+  estudo-net:
+    driver: bridge
+
+services:
+  web:
+    image: petersondev/estudo-docker:v1
+    ports:
+      - 8081:8081
+    networks:
+      - estudo-net
+    depends_on:
+      - postgre
+    environment:
+      DB_DATABASE: kubenews
+      DB_USERNAME: kubenews
+      DB_PASSWORD: pg123
+      DB_HOST: postgre
+
+  postgre:
+     image: postgres
+     ports:
+       - 5432:5432
+     networks:
+       - estudo-net
+     volumes:
+       - postgre-vol:/var/lib/postgresql/data
+     environment:
+       POSTGRES_PASSWORD: pg123
+       POSTGRES_USER: kubenews
+       POSTGRES_DB: kubenews
